@@ -1,0 +1,22 @@
+name: Auto Comment on Pull Request
+on:
+  pull_request:
+    types: [opened, reopened]        # PR 생성 또는 다시 열릴 때 실행
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write           # PR에 댓글 달기 권한
+      contents: read                 # 코드 접근 권한 (필수)
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add Greeting Comment
+        run: |
+          gh pr comment "${GITHUB_HEAD_REF}" \
+            --body "안녕하세요, ${GITHUB_ACTOR}님! 👋 코드 리뷰를 시작합니다 😊"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
